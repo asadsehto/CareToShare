@@ -22,10 +22,7 @@ const limiter = rateLimit({
 })
 
 // Middleware
-app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
-  credentials: true
-}))
+app.use(cors())
 app.use(express.json({ limit: '10mb' }))
 app.use('/api/', limiter)
 
@@ -56,6 +53,9 @@ app.use((err, req, res, next) => {
 })
 
 const PORT = process.env.PORT || 5000
+
+// Export for Vercel
+export default app
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`)
