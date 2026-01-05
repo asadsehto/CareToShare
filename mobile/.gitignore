@@ -1,0 +1,42 @@
+# OSX
+.DS_Store
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Android
+android/.gradle/
+android/app/build/
+android/build/
+android/local.properties
+*.keystore
+!debug.keystore
+
+# iOS (if added later)
+ios/Pods/
+ios/build/
+
+# Metro
+.metro-health-check*
+
+# Testing
+coverage/
+
+# Temporary files
+*.log
+*.tmp
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Bundle artifacts
+*.jsbundle
+*.bundle

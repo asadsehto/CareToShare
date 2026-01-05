@@ -11,6 +11,7 @@ import Category from './pages/Category'
 import UserProfile from './pages/UserProfile'
 import Classes from './pages/Classes'
 import ClassDetail from './pages/ClassDetail'
+import DevicePhotos from './pages/DevicePhotos'
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth()
@@ -48,6 +49,7 @@ function App() {
         <Route path="user/:userId" element={<UserProfile />} />
         <Route path="classes" element={<Classes />} />
         <Route path="class/:classId" element={<ClassDetail />} />
+        <Route path="devices" element={<DevicePhotos />} />
       </Route>
     </Routes>
   )
