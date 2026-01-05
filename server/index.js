@@ -14,11 +14,18 @@ dotenv.config()
 
 const app = express()
 
+// Trust proxy for Vercel
+app.set('trust proxy', 1)
+
 // Rate limiting for production
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per windowMs
-  message: { message: 'Too many requests, please try again later.' }
+  message: { message: 'Too many requests, please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+  // Skip validation for proxied requests
+  validate: { xForwardedForHeader: false }
 })
 
 // Middleware
