@@ -5,6 +5,4 @@ dist/
 .DS_Store
 *.log
 client_secret_*.json
-*.json
 .env
-node_modules/
