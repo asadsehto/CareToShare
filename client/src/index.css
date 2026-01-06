@@ -26,6 +26,13 @@
 body {
   min-width: 320px;
   min-height: 100vh;
+  overflow: hidden;
+}
+
+/* Make main content area scrollable */
+.lg\:pl-64 {
+  height: 100vh;
+  overflow-y: auto;
 }
 
 /* Custom scrollbar */
