@@ -67,10 +67,10 @@ export default function Layout() {
 
       {/* Sidebar */}
       <aside className={`
-        fixed top-0 left-0 z-50 h-full w-64 bg-white shadow-xl transform transition-transform duration-300
-        lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+        fixed top-0 left-0 z-50 h-screen w-64 bg-white shadow-xl transform transition-transform duration-300
+        lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} overflow-y-auto
       `}>
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col min-h-full">
           {/* Logo */}
           <div className="p-6 border-b">
             <Link to="/" className="flex items-center gap-3">
@@ -195,7 +195,7 @@ export default function Layout() {
         </header>
 
         {/* Page content */}
-        <main className="p-4 lg:p-6">
+        <main className="p-4 lg:p-4">
           <Outlet />
         </main>
       </div>
