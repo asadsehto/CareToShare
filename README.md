@@ -1,224 +1,96 @@
-# CareToShare 📚
+# CareToShare
 
-A modern file-sharing platform for students to share study materials with their classmates. Built with React, Node.js, and Google Drive integration.
+**A full-stack platform for students to share and discover study materials.**
 
-![CareToShare](https://img.shields.io/badge/CareToShare-File%20Sharing%20Platform-blue)
+CareToShare combines a React interface with an Express API and MongoDB. Google OAuth provides sign-in, while files are stored in each user’s own Google Drive rather than a central file server.
 
-## ✨ Features
+[Web app](https://caretshare.netlify.app/) · [Author](https://github.com/asadsehto)
 
-- **🔐 Google Authentication** - Secure login with Google accounts
-- **☁️ Google Drive Storage** - Files automatically uploaded to user's Google Drive
-- **📁 Multiple File Types** - Support for PDF, DOC, PPT, TXT, ZIP, Images, Videos
-- **🔍 Search** - Search files by name, description, or search users by name/username
-- **📂 Categories** - Browse files by type (Documents, Presentations, Images, Videos, Archives)
-- **👤 User Profiles** - View user profiles and their uploaded files
-- **📊 Statistics** - Track downloads, views, and file counts
-- **💅 Modern UI** - Clean, responsive design with smooth animations
+## Features
 
-## 🛠️ Tech Stack
+- Google sign-in and user profiles.
+- Uploads and category-based browsing across seven file types.
+- Search over file metadata and users.
+- Download and view instrumentation.
+- Responsive interface with React, Tailwind CSS, and Framer Motion.
 
-### Frontend
-- React 18 with Vite
-- Tailwind CSS for styling
-- Framer Motion for animations
-- React Router for navigation
-- Axios for API calls
+## Architecture
 
-### Backend
-- Node.js with Express
-- MongoDB with Mongoose
-- Google Drive API for file storage
-- JWT for authentication
+```text
+React client → Express API → MongoDB metadata
+                    ↓
+            User-owned Google Drive files
+```
 
-## 📋 Prerequisites
+| Path | Purpose |
+| --- | --- |
+| `client/` | React web client |
+| `server/` | Express API, authentication, and file-sharing backend |
+| `mobile/` | Mobile-related source |
+| `render.yaml` | Deployment configuration |
 
-Before you begin, ensure you have:
-- Node.js 18+ installed
-- MongoDB installed locally or a MongoDB Atlas account
-- A Google Cloud Console account
+## Development
 
-## 🚀 Setup Instructions
-
-### 1. Clone and Install Dependencies
+Requirements: Node.js, MongoDB (local or Atlas), and a Google Cloud project with OAuth credentials and the Google Drive API enabled.
 
 ```bash
+git clone https://github.com/asadsehto/CareToShare.git
 cd CareToShare
-
-# Install all dependencies (root, client, and server)
 npm run install:all
 ```
 
-### 2. Set Up Google Cloud Console
+Create `client/.env`:
 
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project or select an existing one
-3. Enable the following APIs:
-   - Google Drive API
-   - Google+ API (for OAuth)
-
-4. Create OAuth 2.0 Credentials:
-   - Go to **APIs & Services** > **Credentials**
-   - Click **Create Credentials** > **OAuth client ID**
-   - Select **Web application**
-   - Add authorized JavaScript origins:
-     - `http://localhost:3000` (development)
-     - Your production URL
-   - Add authorized redirect URIs:
-     - `http://localhost:3000` (development)
-     - Your production URL
-   - Copy the **Client ID**
-
-5. Configure OAuth Consent Screen:
-   - Go to **APIs & Services** > **OAuth consent screen**
-   - Fill in the required information
-   - Add scopes:
-     - `../auth/userinfo.email`
-     - `../auth/userinfo.profile`
-     - `../auth/drive.file`
-
-### 3. Configure Environment Variables
-
-**Client (.env in /client folder):**
-```bash
-cd client
-cp .env.example .env
-```
-Edit `.env`:
-```
+```dotenv
 VITE_GOOGLE_CLIENT_ID=your-google-client-id
 ```
 
-**Server (.env in /server folder):**
-```bash
-cd server
-cp .env.example .env
-```
-Edit `.env`:
-```
+Create `server/.env`:
+
+```dotenv
 PORT=5000
 MONGODB_URI=mongodb://localhost:27017/caretoshare
-JWT_SECRET=your-super-secret-jwt-key-generate-a-random-string
+JWT_SECRET=replace-with-a-strong-random-secret
 GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
 ```
 
-### 4. Start MongoDB
+Configure the Google OAuth consent screen and match allowed origins/redirects to the application’s implemented flow. The existing setup uses user-info and Drive file scopes; confirm the client/server URLs against your configuration. Keep environment files out of Git.
 
-If using local MongoDB:
-```bash
-mongod
-```
+Start MongoDB if using a local database, then run:
 
-Or use MongoDB Atlas and update the `MONGODB_URI` in your `.env` file.
-
-### 5. Run the Application
-
-From the root directory:
 ```bash
 npm run dev
 ```
 
-This will start both the client (port 3000) and server (port 5000) concurrently.
+The project’s development instructions use client port **3000** and server port **5000**. You can also run each service separately with `npm run dev` in `client/` and `server/`.
 
-Or run them separately:
-```bash
-# Terminal 1 - Server
-cd server
-npm run dev
+## API overview
 
-# Terminal 2 - Client
-cd client
-npm run dev
-```
+| Area | Routes |
+| --- | --- |
+| Authentication | `POST /api/auth/google/token` |
+| File lists | `GET /api/files/recent`, `/popular`, `/category`, `/my-files` |
+| File operations | `GET /api/files/:id`, `POST /api/files/upload`, `POST /api/files/:id/download`, `DELETE /api/files/:id` |
+| Profiles | `PUT /api/users/profile`, `GET /api/users/:id` |
+| Search | `GET /api/search?q=query` |
+| Statistics | `GET /api/stats` |
 
-Visit `http://localhost:3000` to see the application!
+## Deployment
 
-## 📁 Project Structure
+Build the client with `npm run build` in `client/`, deploy its `dist/` output, and configure `VITE_GOOGLE_CLIENT_ID`. Deploy the server with its MongoDB, JWT, and Google environment variables. Update OAuth origins and redirects for the deployed application.
 
-```
-CareToShare/
-├── client/                 # React frontend
-│   ├── src/
-│   │   ├── components/     # Reusable components
-│   │   ├── context/        # React context (Auth)
-│   │   ├── pages/          # Page components
-│   │   ├── utils/          # Utility functions
-│   │   ├── App.jsx         # Main app component
-│   │   └── main.jsx        # Entry point
-│   └── ...
-├── server/                 # Node.js backend
-│   ├── models/            # MongoDB models
-│   ├── routes/            # API routes
-│   ├── middleware/        # Express middleware
-│   └── index.js           # Server entry point
-└── package.json           # Root package.json
-```
+## Usage
 
-## 🌐 API Endpoints
+1. Sign in with Google.
+2. Upload study material and its metadata.
+3. Browse categories or search.
+4. View uploader profiles and download available materials.
 
-### Authentication
-- `POST /api/auth/google/token` - Login with Google
+## Contributing
 
-### Files
-- `GET /api/files/recent` - Get recent files
-- `GET /api/files/popular` - Get popular files
-- `GET /api/files/category` - Get files by category
-- `GET /api/files/my-files` - Get user's files (auth required)
-- `GET /api/files/:id` - Get single file
-- `POST /api/files/upload` - Upload file (auth required)
-- `POST /api/files/:id/download` - Record download
-- `DELETE /api/files/:id` - Delete file (auth required)
+Issues and pull requests are welcome. For authentication or upload bugs, include reproduction steps without credentials or private files.
 
-### Users
-- `PUT /api/users/profile` - Update profile (auth required)
-- `GET /api/users/:id` - Get user profile
+## Author
 
-### Search
-- `GET /api/search?q=query` - Search files and users
-
-### Stats
-- `GET /api/stats` - Get platform statistics
-
-## 🚀 Deployment
-
-### Frontend (Vercel, Netlify, etc.)
-1. Build the client: `cd client && npm run build`
-2. Deploy the `dist` folder
-3. Set environment variable `VITE_GOOGLE_CLIENT_ID`
-
-### Backend (Railway, Render, Heroku, etc.)
-1. Deploy the `server` folder
-2. Set environment variables:
-   - `MONGODB_URI`
-   - `JWT_SECRET`
-   - `GOOGLE_CLIENT_ID`
-   - `GOOGLE_CLIENT_SECRET`
-
-### Free Hosting Options
-- **Frontend**: Vercel, Netlify, GitHub Pages
-- **Backend**: Railway, Render, Cyclic
-- **Database**: MongoDB Atlas (free tier)
-
-## 📝 Usage
-
-1. **Sign In**: Click "Continue with Google" to sign in
-2. **Upload**: Click "Upload" and drag/drop or select a file
-3. **Browse**: Explore files by category or use search
-4. **Download**: Click on any file to view details and download
-5. **Profile**: Update your display name and username
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
----
-
-Made with ❤️ for students everywhere!
+[Asad Saleem](https://github.com/asadsehto) · [LinkedIn](https://www.linkedin.com/in/asadsaleemsahto/)
